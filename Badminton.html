@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Service Court au Badminton – EPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a8a5a;
+    --green-light: #27c47e;
+    --green-pale: #e6f7f0;
+    --blue: #1565c0;
+    --blue-light: #42a5f5;
+    --yellow: #ffd600;
+    --orange: #ff7043;
+    --white: #fff;
+    --bg: #f0f9f4;
+    --card-bg: #fff;
+    --shadow: 0 4px 24px rgba(26,138,90,0.12);
+    --radius: 20px;
+    --text: #1a2e22;
+    --muted: #5a7a6a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0d5e38 0%, #1a8a5a 60%, #27c47e 100%);
+    color: #fff;
+    padding: 36px 24px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -30px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .badge {
+    display: inline-block;
+    background: var(--yellow);
+    color: #333;
+    font-weight: 800;
+    font-size: 0.78rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  header h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+  header p.subtitle {
+    font-size: 1.05rem;
+    opacity: 0.88;
+    font-weight: 600;
+  }
+  .shuttle-icon {
+    font-size: 2.4rem;
+    margin-bottom: 6px;
+    display: block;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 28px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: var(--green-light); transform: translateY(-2px); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 22px 14px;
+    border-bottom: 2px solid var(--green-pale);
+  }
+  .card-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .card-icon.green  { background: var(--green-pale); }
+  .card-icon.blue   { background: #e3f0fd; }
+  .card-icon.orange { background: #fff3ee; }
+  .card-icon.yellow { background: #fffde7; }
+
+  .card-header h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .card-body { padding: 20px 22px; }
+
+  /* ── OBJECTIVE ── */
+  .objective-box {
+    background: linear-gradient(135deg, var(--green-pale), #d0f5e4);
+    border-left: 5px solid var(--green);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #0d5e38;
+  }
+
+  /* ── COURT DIAGRAM SVG ── */
+  .court-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .court-container svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .court-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  .legend-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--green-pale);
+    border-radius: 14px;
+    transition: background 0.2s;
+  }
+  .step:hover { background: #c4eedb; }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-text { font-size: 0.97rem; font-weight: 600; line-height: 1.5; padding-top: 6px; }
+  .step-text strong { color: var(--green); }
+
+  /* ── RULES GRID ── */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 500px) { .rules-grid { grid-template-columns: 1fr; } }
+  .rule-item {
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 0.93rem;
+    font-weight: 700;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .rule-item.ok  { background: #e6f7f0; border-left: 4px solid var(--green); }
+  .rule-item.nok { background: #ffebee; border-left: 4px solid #e53935; }
+  .rule-item .ri { font-size: 1.3rem; flex-shrink: 0; }
+
+  /* ── VIDEO BUTTON ── */
+  .video-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #c62828, #e53935);
+    color: #fff;
+    text-decoration: none;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem;
+    font-weight: 800;
+    padding: 16px 28px;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(229,57,53,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .video-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 26px rgba(229,57,53,0.45);
+  }
+  .video-btn .play { font-size: 1.6rem; }
+
+  /* ── RESOURCE LINKS ── */
+  .resource-links { display: flex; flex-direction: column; gap: 10px; }
+  .res-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.93rem;
+    transition: transform 0.15s, box-shadow 0.15s;
+    color: #1a2e22;
+  }
+  .res-link:hover { transform: translateX(4px); box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+  .res-link.pdf  { background: #e3f0fd; }
+  .res-link.photo { background: #f3e8ff; }
+  .res-link .res-icon { font-size: 1.4rem; }
+
+  /* ── QUIZ ── */
+  .quiz-section { }
+  .quiz-q {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #0d5e38;
+    padding: 10px 14px;
+    background: var(--green-pale);
+    border-radius: 10px;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-btn {
+    background: #fff;
+    border: 2.5px solid #d0e8da;
+    border-radius: 12px;
+    padding: 11px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    color: var(--text);
+  }
+  .quiz-btn:hover { border-color: var(--green); background: var(--green-pale); }
+  .quiz-btn.correct { background: #e6f7f0; border-color: var(--green); color: #0d5e38; }
+  .quiz-btn.wrong   { background: #ffebee; border-color: #e53935; color: #c62828; }
+  .quiz-feedback {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok  { background: #e6f7f0; color: #0d5e38; }
+  .quiz-feedback.ko  { background: #ffebee; color: #c62828; }
+  .quiz-next {
+    margin-top: 10px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 22px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: none;
+    transition: background 0.15s;
+  }
+  .quiz-next:hover { background: #0d5e38; }
+  .quiz-next.show { display: inline-block; }
+  .quiz-score {
+    text-align: center;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--green);
+    padding: 14px;
+    background: var(--green-pale);
+    border-radius: 14px;
+    display: none;
+  }
+  .quiz-score.show { display: block; }
+
+  /* ── LICENSE ── */
+  .license-box {
+    background: #f9f9f9;
+    border: 1.5px dashed #b0ccbe;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .license-box a { color: var(--green); text-decoration: underline; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 18px 16px 28px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="shuttle-icon">🏸</span>
+  <div class="badge">EPS · Badminton · REL</div>
+  <h1>Le Service Court</h1>
+  <p class="subtitle">Apprendre à servir comme un pro !</p>
+</header>
+
+<main>
+
+  <!-- OBJECTIF -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">🎯</div>
+      <h2>Objectif</h2>
+    </div>
+    <div class="card-body">
+      <div class="objective-box">
+        Réaliser un service court pour envoyer le volant dans la zone adverse, proche du filet, de façon à rendre difficile le retour de l'adversaire.
+      </div>
+    </div>
+  </div>
+
+  <!-- TERRAIN & ZONE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon blue">🗺️</div>
+      <h2>La Zone de Service Court</h2>
+    </div>
+    <div class="card-body">
+      <p style="font-size:0.95rem;font-weight:600;color:var(--muted);margin-bottom:14px;">
+        Le joueur A sert depuis son carré. Le volant doit atterrir dans la zone hachurée (B) côté adverse, juste après le filet.
+      </p>
+      <div class="court-container">
+        <!-- SVG BADMINTON COURT -->
+        <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" style="border-radius:12px;background:#c8e6c9;">
+
+          <!-- Court background -->
+          <rect x="10" y="10" width="400" height="220" rx="6" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+
+          <!-- Court lines -->
+          <!-- Outer boundary -->
+          <rect x="20" y="20" width="380" height="200" fill="none" stroke="white" stroke-width="2"/>
+          <!-- Short service line (close to net) -->
+          <!-- Sides doubles -->
+          <line x1="20" y1="20" x2="20" y2="220" stroke="white" stroke-width="2"/>
+          <line x1="400" y1="20" x2="400" y2="220" stroke="white" stroke-width="2"/>
+          <!-- Inner singles sidelines -->
+          <line x1="45" y1="20" x2="45" y2="220" stroke="white" stroke-width="1.2" opacity="0.7"/>
+          <line x1="375" y1="20" x2="375" y2="220" stroke="white" stroke-width="1.2" opacity="0.7"/>
+          <!-- Back boundary halves -->
+          <line x1="20" y1="195" x2="400" y2="195" stroke="white" stroke-width="1.2" opacity="0.7"/>
+          <line x1="20" y1="45" x2="400" y2="45" stroke="white" stroke-width="1.2" opacity="0.7"/>
+          <!-- Center line (vertical) -->
+          <line x1="210" y1="20" x2="210" y2="220" stroke="white" stroke-width="2"/>
+          <!-- Short service lines (horizontal, near net) -->
+          <line x1="20" y1="120" x2="400" y2="120" stroke="white" stroke-width="2"/>
+          <!-- Half-court vertical lines -->
+          <line x1="210" y1="45" x2="210" y2="195" stroke="white" stroke-width="1.2" opacity="0.7"/>
+
+          <!-- NET -->
+          <rect x="15" y="116" width="390" height="8" rx="2" fill="#ffe082" stroke="#f9a825" stroke-width="1"/>
+          <text x="210" y="123" text-anchor="middle" fill="#795548" font-weight="bold" font-size="8">FILET</text>
+
+          <!-- SERVICE ZONE highlight (blue hatch) – right side, just after net -->
+          <!-- Zone B: x=210 to 320 (center service area), y=20 to 120 top half -->
+          <rect x="215" y="22" width="100" height="94" fill="url(#hatch)" rx="3" opacity="0.85"/>
+          <rect x="215" y="22" width="100" height="94" fill="none" stroke="#1565c0" stroke-width="2.5" rx="3"/>
+
+          <!-- Hatch pattern -->
+          <defs>
+            <pattern id="hatch" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="10" stroke="#42a5f5" stroke-width="3" opacity="0.5"/>
+            </pattern>
+          </defs>
+
+          <!-- Player A dot -->
+          <circle cx="105" cy="170" r="14" fill="#ff7043" stroke="white" stroke-width="2"/>
+          <text x="105" y="175" text-anchor="middle" fill="white" font-weight="bold" font-size="13">A</text>
+
+          <!-- Label B in zone -->
+          <text x="265" y="75" text-anchor="middle" fill="#0d47a1" font-weight="bold" font-size="22">B</text>
+
+          <!-- Trajectory arrows (dashed) from A toward zone B -->
+          <!-- Arrow 1: diagonal right toward center of B -->
+          <line x1="105" y1="160" x2="230" y2="90" stroke="white" stroke-width="2" stroke-dasharray="6,4" opacity="0.9"/>
+          <polygon points="230,82 224,92 236,92" fill="white" opacity="0.9" transform="rotate(-35,230,90)"/>
+          <!-- Arrow 2: cross diagonal toward far B -->
+          <line x1="105" y1="156" x2="290" y2="70" stroke="#ffd600" stroke-width="2" stroke-dasharray="6,4" opacity="0.9"/>
+          <polygon points="290,62 284,72 296,72" fill="#ffd600" opacity="0.9" transform="rotate(-30,290,70)"/>
+
+          <!-- Labels -->
+          <text x="105" y="207" text-anchor="middle" fill="white" font-size="9" font-weight="600">Serveur</text>
+          <text x="265" y="108" text-anchor="middle" fill="#0d47a1" font-size="9" font-weight="700">Zone cible</text>
+
+          <!-- Court label -->
+          <text x="210" y="236" text-anchor="middle" fill="#1b5e20" font-size="10" font-weight="700" opacity="0.8">Terrain de Badminton</text>
+        </svg>
+      </div>
+      <div class="court-legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ff7043;"></div>
+          <span>Serveur (A)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#42a5f5;"></div>
+          <span>Zone de réception (B)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ffd600;border:1px solid #aaa"></div>
+          <span>Trajectoires possibles</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉTAPES DU GESTE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">🤸</div>
+      <h2>Comment réaliser le service court ?</h2>
+    </div>
+    <div class="card-body">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Position de départ :</strong> Place-toi derrière la ligne de service, pieds décalés, poids sur la jambe arrière.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Tiens le volant :</strong> Tiens le volant par ses plumes, devant toi, bras tendu, à hauteur de hanche.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Le geste :</strong> Lance une petite frappe <strong>en douceur</strong> avec la raquette, de bas en haut. Le volant doit juste passer au-dessus du filet.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>La trajectoire :</strong> Le volant doit avoir une trajectoire <strong>rasante</strong>, proche du filet, pour tomber juste dans la zone adverse.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Après le service :</strong> Reprends immédiatement une position de jeu pour réagir au retour !</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RÈGLES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon orange">📋</div>
+      <h2>Les règles du service</h2>
+    </div>
+    <div class="card-body">
+      <div class="rules-grid">
+        <div class="rule-item ok">
+          <span class="ri">✅</span>
+          <span>Le volant doit passer <strong>au-dessus du filet</strong></span>
+        </div>
+        <div class="rule-item ok">
+          <span class="ri">✅</span>
+          <span>Le volant doit tomber dans la <strong>zone de service adverse</strong></span>
+        </div>
+        <div class="rule-item ok">
+          <span class="ri">✅</span>
+          <span>La frappe doit se faire <strong>en dessous de la hanche</strong></span>
+        </div>
+        <div class="rule-item ok">
+          <span class="ri">✅</span>
+          <span>Les deux pieds doivent rester <strong>au sol</strong> pendant le service</span>
+        </div>
+        <div class="rule-item nok">
+          <span class="ri">❌</span>
+          <span>Ne pas frapper <strong>au-dessus de la taille</strong></span>
+        </div>
+        <div class="rule-item nok">
+          <span class="ri">❌</span>
+          <span>Ne pas faire tomber le volant <strong>dans le filet</strong></span>
+        </div>
+        <div class="rule-item nok">
+          <span class="ri">❌</span>
+          <span>Ne pas servir <strong>hors de la zone</strong> cible</span>
+        </div>
+        <div class="rule-item nok">
+          <span class="ri">❌</span>
+          <span>Ne pas bouger <strong>les pieds</strong> avant d'avoir frappé</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDÉO -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#ffebee;">🎬</div>
+      <h2>Regarde la vidéo !</h2>
+    </div>
+    <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+      <p style="font-size:0.95rem;font-weight:600;color:var(--muted);text-align:center;">
+        Visionne cette vidéo pour bien comprendre et voir le geste en situation.
+      </p>
+      <a class="video-btn" href="https://youtu.be/TNU6m7EGbLs?si=9mCa2c69lzCS7qkG" target="_blank" rel="noopener">
+        <span class="play">▶️</span>
+        Voir la vidéo du service court
+      </a>
+    </div>
+  </div>
+
+  <!-- MINI QUIZ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon yellow">🧠</div>
+      <h2>Teste tes connaissances !</h2>
+    </div>
+    <div class="card-body">
+      <div id="quiz-container"></div>
+      <div class="quiz-score" id="quiz-score"></div>
+    </div>
+  </div>
+
+  <!-- RESSOURCES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon blue">📚</div>
+      <h2>Ressources complémentaires</h2>
+    </div>
+    <div class="card-body">
+      <div class="resource-links">
+        <a class="res-link pdf" href="https://pedagogie.ac-strasbourg.fr/fileadmin/pedagogie/eps/ressources/CA4/Strategie_d_apprentissage/Badminton_Situations_d_apprentissage_Badminton.pdf" target="_blank" rel="noopener">
+          <span class="res-icon">📄</span>
+          <div>
+            <div style="font-size:0.98rem;">Situations d'apprentissage Badminton</div>
+            <div style="font-size:0.8rem;color:var(--muted);font-weight:600;">Académie de Strasbourg · ac-strasbourg.fr</div>
+          </div>
+        </a>
+        <a class="res-link photo" href="https://www.pexels.com/fr-fr/photo/personnes-jouant-au-badminton-2202685/" target="_blank" rel="noopener">
+          <span class="res-icon">📷</span>
+          <div>
+            <div style="font-size:0.98rem;">Photo libre de droits – Joueurs de Badminton</div>
+            <div style="font-size:0.8rem;color:var(--muted);font-weight:600;">Pexels · libre d'utilisation</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- LICENCE -->
+  <div class="license-box">
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;flex-wrap:wrap;">
+      <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-nc-sa.svg" alt="CC BY-NC-SA 4.0" style="height:28px;"/>
+      <span style="display:inline-flex;align-items:center;gap:6px;background:#f0f4ff;border:1.5px solid #c0caff;border-radius:8px;padding:4px 10px;font-size:0.8rem;font-weight:700;color:#3a4a9a;">
+        <!-- Pictogramme "Créé par l'humain avec l'aide de l'IA" -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 64 64" style="flex-shrink:0;">
+          <!-- Humain (silhouette) -->
+          <circle cx="22" cy="14" r="7" fill="#3a4a9a"/>
+          <path d="M8 42c0-8 6-14 14-14s14 6 14 14v4H8z" fill="#3a4a9a"/>
+          <!-- IA (circuit/puce) -->
+          <rect x="38" y="20" width="20" height="20" rx="3" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+          <rect x="42" y="24" width="12" height="12" rx="2" fill="#ede9fe"/>
+          <line x1="44" y1="20" x2="44" y2="17" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="48" y1="20" x2="48" y2="17" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="52" y1="20" x2="52" y2="17" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="44" y1="40" x2="44" y2="43" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="48" y1="40" x2="48" y2="43" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="52" y1="40" x2="52" y2="43" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="38" y1="27" x2="35" y2="27" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="38" y1="33" x2="35" y2="33" stroke="#7c3aed" stroke-width="2"/>
+          <!-- Flèche collaboration -->
+          <path d="M31 31 Q34 31 35 30" stroke="#f59e0b" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <text x="42" y="30" font-size="6" font-weight="bold" fill="#7c3aed">IA</text>
+          <!-- Cœur collaboration -->
+          <path d="M29 50 Q32 47 35 50 Q38 53 32 57 Q26 53 29 50z" fill="#f59e0b"/>
+        </svg>
+        Créé par l'humain avec l'aide de l'IA
+      </span>
+    </div>
+    🔓 Ce document est une <strong>Ressource Éducative Libre (REL)</strong> sous
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr" target="_blank">Licence Creative Commons Attribution – Pas d'Utilisation Commerciale – Partage dans les mêmes conditions (CC BY-NC-SA 4.0)</a>.<br>
+    Toute réutilisation ou adaptation doit être <strong>non commerciale</strong> et partagée sous la <strong>même licence CC BY-NC-SA</strong>.<br><br>
+    <strong>✍️ Auteurs :</strong> Titouan DONNETTE, Paul PONCELET et Quentin DEWET<br>
+    <strong>📅 Date de publication :</strong> 25/03/2026<br><br>
+    Sources des contenus : © <a href="https://www.ac-strasbourg.fr" target="_blank">Académie de Strasbourg</a> · Images : <a href="https://www.pexels.com/fr-fr/photo/personnes-jouant-au-badminton-2202685/" target="_blank">Pexels</a> (libre d'utilisation)
+  </div>
+
+</main>
+
+<footer>
+  Titouan DONNETTE, Paul PONCELET &amp; Quentin DEWET · EPS Badminton · Service court · 25/03/2026
+</footer>
+
+<script>
+  const questions = [
+    {
+      q: "Où doit tomber le volant lors d'un service court ?",
+      options: [
+        "Au fond du court adverse",
+        "Dans la zone de service proche du filet",
+        "N'importe où de l'autre côté du filet",
+        "Directement sur l'adversaire"
+      ],
+      correct: 1,
+      feedback: "✅ Bravo ! Le service court vise la zone proche du filet côté adverse."
+    },
+    {
+      q: "À quelle hauteur doit se faire la frappe lors du service ?",
+      options: [
+        "Au-dessus de la tête",
+        "Au niveau des épaules",
+        "En dessous de la hanche",
+        "Au niveau du genou uniquement"
+      ],
+      correct: 2,
+      feedback: "✅ Correct ! La frappe doit se faire en dessous de la hanche, c'est la règle !"
+    },
+    {
+      q: "Que faut-il faire avec les pieds pendant le service ?",
+      options: [
+        "Sauter pour prendre de l'élan",
+        "Les garder au sol",
+        "Reculer d'un pas",
+        "N'importe quelle position"
+      ],
+      correct: 1,
+      feedback: "✅ Exact ! Les deux pieds doivent rester au sol pendant tout le service."
+    },
+    {
+      q: "Quelle doit être la trajectoire du volant en service court ?",
+      options: [
+        "Très haute, en cloche",
+        "Rasante, juste au-dessus du filet",
+        "En ligne droite très rapide",
+        "Cela n'a pas d'importance"
+      ],
+      correct: 1,
+      feedback: "✅ Super ! Une trajectoire rasante rend le service plus difficile à retourner."
+    }
+  ];
+
+  let current = 0;
+  let score = 0;
+  let answered = false;
+
+  function renderQuestion() {
+    const container = document.getElementById('quiz-container');
+    if (current >= questions.length) {
+      container.innerHTML = '';
+      const scoreEl = document.getElementById('quiz-score');
+      scoreEl.textContent = `🏆 Score final : ${score} / ${questions.length} — ${score === questions.length ? 'Parfait !' : score >= 3 ? 'Très bien !' : 'Continue à t\'entraîner !'}`;
+      scoreEl.classList.add('show');
+      return;
+    }
+    const q = questions[current];
+    answered = false;
+    container.innerHTML = `
+      <div class="quiz-q">Question ${current+1}/${questions.length} : ${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, i) => `<button class="quiz-btn" onclick="answer(${i})">${opt}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfeedback"></div>
+      <button class="quiz-next" id="qnext" onclick="nextQ()">Question suivante →</button>
+    `;
+  }
+
+  function answer(idx) {
+    if (answered) return;
+    answered = true;
+    const q = questions[current];
+    const btns = document.querySelectorAll('.quiz-btn');
+    const feedback = document.getElementById('qfeedback');
+    const next = document.getElementById('qnext');
+    btns.forEach((btn, i) => {
+      if (i === q.correct) btn.classList.add('correct');
+      else if (i === idx && i !== q.correct) btn.classList.add('wrong');
+      btn.disabled = true;
+    });
+    if (idx === q.correct) {
+      score++;
+      feedback.textContent = q.feedback;
+      feedback.className = 'quiz-feedback ok show';
+    } else {
+      feedback.textContent = '❌ Pas tout à fait ! ' + q.feedback;
+      feedback.className = 'quiz-feedback ko show';
+    }
+    next.classList.add('show');
+  }
+
+  function nextQ() {
+    current++;
+    renderQuestion();
+  }
+
+  renderQuestion();
+</script>
+</body>
+</html>
